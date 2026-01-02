@@ -33,15 +33,14 @@ const PremiumNavLink: React.FC<PremiumNavLinkProps> = ({ item, onClick }) => (
   <button 
     onClick={() => onClick(item.id)}
     className="group relative flex items-center justify-center px-1 lg:px-2 py-2 cursor-pointer"
+    aria-label={`Navigate to ${item.label}`}
   >
     <div className="flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-1.5 lg:py-2 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] bg-transparent hover:bg-white/5 border border-transparent hover:border-white/5">
       {/* Icon */}
-      <item.icon className="w-4 h-4 lg:w-5 lg:h-5 text-gray-400 group-hover:text-white transition-colors duration-500 relative z-10" />
+      <item.icon className="w-4 h-4 lg:w-5 lg:h-5 text-gray-400 group-hover:text-white transition-colors duration-500 relative z-10" aria-hidden="true" />
       
       {/* Text Label - Always Visible */}
-      <span className="text-xs lg:text-sm font-medium text-gray-300 group-hover:text-white whitespace-nowrap transition-colors duration-500 relative z-10">
-        {item.label}
-      </span>
+      <span className="text-xs lg:text-sm font-medium text-gray-300 group-hover:text-white whitespace-nowrap transition-colors duration-500 relative z-10">{item.label}</span>
 
       {/* Glow Effect */}
       <div className="absolute inset-0 bg-brand-purple/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -102,6 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGetStarted, onNavClick }) => {
             aria-expanded={isMobileMenuOpen}
           >
             <Menu className="w-6 h-6" aria-hidden="true" />
+            <span className="sr-only">Open menu</span>
           </button>
         </div>
       </nav>
@@ -116,8 +116,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onGetStarted, onNavClick }) => {
                <button 
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="p-2 rounded-full bg-white/5 border border-white/10 text-white"
+                  aria-label="Close mobile menu"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-6 h-6" aria-hidden="true" />
+                  <span className="ml-2 text-sm font-medium">Close</span>
+                  <span className="sr-only">Close menu</span>
                </button>
             </div>
 

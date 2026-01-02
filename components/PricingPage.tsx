@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Check, X, Zap, Crown, Sparkles, BarChart3, Users, FileText, PieChart } from 'lucide-react';
+import { ArrowLeft, Check, X, Zap, Crown, Sparkles, BarChart3, Users, FileText, PieChart, Calendar, Clock } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Helmet } from 'react-helmet-async';
 
@@ -28,6 +28,45 @@ function useOnScreen(options: IntersectionObserverInit) {
 
   return [ref, isVisible] as const;
 }
+
+// Billing Cycle Toggle Component
+const BillingToggle = ({ isAnnual, onToggle }: { isAnnual: boolean; onToggle: (annual: boolean) => void }) => {
+  return (
+    <div className="flex items-center justify-center gap-4 mb-12">
+      <div className="flex items-center gap-3">
+        <span className={`text-sm font-medium transition-colors ${!isAnnual ? 'text-white' : 'text-gray-500'}`}>
+          Monthly
+        </span>
+        <button
+          onClick={() => onToggle(!isAnnual)}
+          aria-label={`Switch to ${isAnnual ? 'monthly' : 'annual'} billing`}
+          className="relative inline-flex h-8 w-14 items-center rounded-full bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-black hover:bg-white/20"
+          title={`Switch to ${isAnnual ? 'monthly' : 'annual'} billing`}
+        >
+          <span className="sr-only">
+            {isAnnual ? 'Switch to monthly billing' : 'Switch to annual billing'}
+          </span>
+          <span
+            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform ${
+              isAnnual ? 'translate-x-7' : 'translate-x-1'
+            }`}
+          />
+        </button>
+        <span className={`text-sm font-medium transition-colors ${isAnnual ? 'text-white' : 'text-gray-500'}`}>
+          Annual
+        </span>
+      </div>
+      {isAnnual && (
+        <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
+          <Calendar className="w-3 h-3 text-green-400" />
+          <span className="text-xs font-bold text-green-400 uppercase tracking-wide">
+            Save 33%
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Professional visual for pricing cards (UI Mockups style)
 const PricingVisual = ({ type }: { type: 'free' | 'pro' }) => {
@@ -117,22 +156,34 @@ const PricingCard = ({
     title, 
     price, 
     originalPrice,
+    annualPrice,
+    annualOriginalPrice,
     features, 
     isPopular, 
     type,
     delay,
-    onBack 
+    onBack,
+    isAnnual 
 }: { 
     title: string; 
     price: string; 
     originalPrice?: string;
+    annualPrice?: string;
+    annualOriginalPrice?: string;
     features: { name: string; included: boolean }[]; 
     isPopular?: boolean;
     type: 'free' | 'pro';
     delay: number;
     onBack: () => void;
+    isAnnual: boolean;
 }) => {
     const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
+
+    // Helper function to calculate monthly equivalent for annual pricing
+    const getMonthlyEquivalent = (annualPriceStr: string) => {
+        const priceNum = parseInt(annualPriceStr.replace(/[$,]/g, ''));
+        return Math.round(priceNum / 12);
+    };
 
     return (
         <div ref={ref} className={`relative flex flex-col h-full w-full transition-all duration-1000 ease-[cubic-bezier(0.17,0.55,0.55,1)] ${
@@ -160,17 +211,47 @@ const PricingCard = ({
                     
                     <div className="flex items-end gap-3 mb-8">
                         <div className="flex flex-col">
-                            {originalPrice && (
-                                <span className="text-lg text-gray-500 line-through font-medium mb-1 decoration-white/20 decoration-2">{originalPrice}</span>
+                            {/* Original Price */}
+                            {(isAnnual ? annualOriginalPrice : originalPrice) && (
+                                <span className="text-lg text-gray-500 line-through font-medium mb-1 decoration-white/20 decoration-2">
+                                    {isAnnual ? annualOriginalPrice : originalPrice}
+                                </span>
                             )}
+                            
+                            {/* Current Price - Using dashes for development */}
                             <div className="flex items-baseline gap-1">
-                                <span className="text-5xl md:text-6xl font-bold text-white tracking-tight">{price}</span>
-                                {price !== 'Free' && <span className="text-gray-500 font-medium">/mo</span>}
+                                <span className="text-5xl md:text-6xl font-bold text-white tracking-tight">
+                                    {price === '--' ? '--' : price} 
+                                </span>
+                                {(price !== 'Free' && price !== '--' && (!isAnnual || (isAnnual && annualPrice && annualPrice !== price))) && (
+                                    <span className="text-gray-500 font-medium">
+                                        {isAnnual ? '/yr' : '/mo'}
+                                    </span>
+                                )}
+                            </div>
+                            
+                            {/* Billing cycle hint for annual */}
+                            {isAnnual && price !== 'Free' && price !== '--' && annualPrice && annualPrice !== '--' && (
+                                <div className="flex items-center gap-1 mt-1">
+                                    <Clock className="w-3 h-3 text-green-400" />
+                                    <span className="text-xs text-green-400 font-medium">
+                                        ~${getMonthlyEquivalent(annualPrice)}/mo equivalent
+                                    </span>
+                                </div>
+                            )}
+                            
+                            {/* Development notice */}
+                            <div className="mt-2 px-2 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                                <span className="text-xs text-blue-400 font-medium">
+                                    Development Pricing
+                                </span>
                             </div>
                         </div>
-                        {originalPrice && (
+                        
+                        {/* Savings Badge */}
+                        {(isAnnual ? annualOriginalPrice : originalPrice) && (
                             <div className="mb-2 px-2.5 py-1 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold uppercase tracking-wide">
-                                Save 37%
+                                Save {isAnnual ? '33%' : '37%'}
                             </div>
                         )}
                     </div>
@@ -197,8 +278,9 @@ const PricingCard = ({
                         glow={isPopular} 
                         className={`w-full !py-4 !text-base !rounded-2xl ${isPopular ? 'hover:scale-[1.02]' : ''}`}
                         onClick={onBack}
+                        aria-label={price === 'Free' || price === '--' ? 'Get started with free plan' : 'Upgrade to pro plan'}
                     >
-                        {price === 'Free' ? 'Get Started' : 'Get Pro Teacher'}
+                        {price === 'Free' || price === '--' ? 'Get Started Free' : 'Get Pro Access'}
                     </Button>
                 </div>
             </div>
@@ -207,6 +289,8 @@ const PricingCard = ({
 };
 
 export const PricingPage = ({ onBack }: { onBack: () => void }) => {
+  const [isAnnual, setIsAnnual] = useState(false);
+
   return (
     <div className="min-h-screen pt-32 pb-20 px-4 md:px-6 relative overflow-hidden flex flex-col items-center w-full">
         <Helmet>
@@ -223,10 +307,10 @@ export const PricingPage = ({ onBack }: { onBack: () => void }) => {
              <button 
                 onClick={onBack}
                 className="mb-12 flex items-center gap-2 text-gray-400 hover:text-white transition-colors group px-4 py-2 rounded-full hover:bg-white/5"
-            >
+             >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 <span className="font-medium">Back to Home</span>
-            </button>
+             </button>
 
             <div className="text-center mb-16 animate-fade-in px-4">
                 {/* SEO H1 */}
@@ -241,14 +325,29 @@ export const PricingPage = ({ onBack }: { onBack: () => void }) => {
                 </p>
             </div>
 
-            {/* Changed grid to max 2 columns centered */}
+            {/* Billing Toggle */}
+            <div className="text-center mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-white">Choose Your Billing Cycle</h2>
+                <BillingToggle isAnnual={isAnnual} onToggle={setIsAnnual} />
+            </div>
+
+            {/* Pricing Plans */}
+            <div className="text-center mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-white">Our Pricing Plans</h2>
+                <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                    Flexible pricing designed to grow with your needs. Start free and upgrade when you're ready.
+                </p>
+            </div>
+
+            {/* Pricing Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto px-2">
                 <PricingCard 
                     title="Starter"
-                    price="Free"
+                    price="--"
                     type="free"
                     delay={100}
                     onBack={onBack}
+                    isAnnual={isAnnual}
                     features={[
                         { name: "Up to 3 Exams", included: true },
                         { name: "50 Students per exam", included: true },
@@ -261,12 +360,15 @@ export const PricingPage = ({ onBack }: { onBack: () => void }) => {
                 
                 <PricingCard 
                     title="Pro Teacher"
-                    originalPrice="$40"
-                    price="$25"
+                    originalPrice="--"
+                    price="--"
+                    annualPrice="--"
+                    annualOriginalPrice="--"
                     isPopular
                     type="pro"
                     delay={300}
                     onBack={onBack}
+                    isAnnual={isAnnual}
                     features={[
                         { name: "Unlimited Exams", included: true },
                         { name: "Unlimited Students", included: true },
@@ -276,6 +378,17 @@ export const PricingPage = ({ onBack }: { onBack: () => void }) => {
                         { name: "Priority 24/7 Support", included: true },
                     ]}
                 />
+            </div>
+
+            {/* Additional Info */}
+            <div className="mt-16 text-center">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-white">Limited Time Offer</h2>
+                <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-purple/10 border border-brand-purple/20">
+                    <Sparkles className="w-5 h-5 text-brand-glow" />
+                    <span className="text-brand-glow font-medium">
+                        Special Launch Offer: Save up to 33% on annual plans
+                    </span>
+                </div>
             </div>
         </div>
     </div>

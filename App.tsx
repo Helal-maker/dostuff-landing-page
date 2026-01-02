@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { PartnerLogos } from './components/PartnerLogos';
 import { Features } from './components/Features';
 import { ChoosePath } from './components/ChoosePath';
 import { Footer } from './components/Footer';
@@ -101,7 +100,6 @@ export default function App() {
                       setView('download');
                       scrollToTop();
                   }} />
-                  <PartnerLogos />
                   <Features />
                   <ChoosePath onNavigate={handleNavigation} />
               </>

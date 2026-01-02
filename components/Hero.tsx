@@ -73,7 +73,7 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
     <section id="home" ref={heroRef} className="relative min-h-[90vh] w-full flex flex-col justify-center px-6 pt-32 pb-10 overflow-hidden">
       <Helmet>
         <title>Do Stuff - The Ultimate Online Exam Platform & Quiz Builder</title>
-        <meta name="description" content="Professional online exam platform for teachers and students. Create engaging assessments with multiple question types, timer control, custom styling, and analytics. Make a test in minutes!" />
+        <meta name="description" content="Create professional online exams and quizzes with multiple question types, timers, and analytics. Make a test in minutes. No downloads required." />
         <meta name="keywords" content="online exam platform, quiz builder online, make a test, test maker, online assessment platform, exam software, educational technology, teacher tools, student assessments" />
         <meta name="author" content="Do Stuff Team" />
         <meta name="robots" content="index, follow" />
@@ -130,8 +130,9 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                     glow 
                     className="!px-8 !py-3.5 !rounded-full group w-full sm:w-auto"
                     onClick={onGetStarted}
+                    aria-label="Start creating exams as a teacher"
                 >
-                  Start as Teacher
+                  <span>Start as Teacher</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
@@ -140,8 +141,9 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                     variant="secondary" 
                     className="!px-8 !py-3.5 !rounded-full w-full sm:w-auto"
                     onClick={onGetStarted}
+                    aria-label="Join as a student to take exams"
                 >
-                  Join as Student
+                  <span>Join as Student</span>
                 </Button>
               </div>
             </div>

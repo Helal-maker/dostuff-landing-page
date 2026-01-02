@@ -82,8 +82,8 @@ const BackgroundThumbnail = ({ type }: { type: 'Teacher' | 'Student' }) => {
                      </div>
 
                      {/* Floating "New Exam" Button Decoration */}
-                     <div className="absolute -left-6 top-20 bg-[#1a1a1a] border border-white/20 p-3 rounded-xl shadow-xl flex items-center gap-3 transform -rotate-3">
-                         <div className="w-8 h-8 rounded-full bg-brand-glow flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-brand-purple/50">+</div>
+                     <div className="absolute -left-6 top-20 bg-[#1a1a1a] border border-white/20 p-3 rounded-xl shadow-xl flex items-center gap-3 transform -rotate-3" role="img" aria-label="Create new exam button">
+                         <div className="w-8 h-8 rounded-full bg-brand-glow flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-brand-purple/50" aria-hidden="true">+</div>
                          <div className="space-y-1 pr-2">
                              <div className="w-16 h-2 bg-white/40 rounded-full" />
                              <div className="w-10 h-1.5 bg-white/10 rounded-full" />
@@ -221,7 +221,7 @@ const PathCard = ({
                         className="w-full"
                         onClick={() => onNavigate('download')}
                     >
-                        {buttonText}
+                        <span>{buttonText}</span>
                         {isPrimary && <ArrowRight className="w-4 h-4" />}
                     </Button>
                 </div>
@@ -248,10 +248,11 @@ export const ChoosePath: React.FC<ChoosePathProps> = ({ onNavigate }) => {
             <button 
                 onClick={() => onNavigate('how-it-works')} 
                 className="inline-flex items-center gap-2 mt-6 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-purple/30 text-gray-300 hover:text-white transition-all group"
+                aria-label="Learn how Do Stuff works"
             >
-                <HelpCircle className="w-4 h-4 text-brand-purple" />
+                <HelpCircle className="w-4 h-4 text-brand-purple" aria-hidden="true" />
                 <span className="text-sm font-medium">New here? Learn how Do Stuff works</span>
-                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform text-gray-500 group-hover:text-white" />
+                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform text-gray-500 group-hover:text-white" aria-hidden="true" />
             </button>
         </div>
 

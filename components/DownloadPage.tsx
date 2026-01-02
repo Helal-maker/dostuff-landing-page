@@ -74,6 +74,7 @@ const MockupScreen = ({ type }: { type: 'ios' | 'android' | 'web' }) => {
                 {type === 'android' && (
                     <div className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-brand-blue text-black flex items-center justify-center shadow-lg shadow-blue-900/20">
                         <div className="w-4 h-4 text-xl leading-none">+</div>
+                        <span className="sr-only">Add new exam</span>
                     </div>
                 )}
             </div>
@@ -224,6 +225,14 @@ export const DownloadPage = ({ onBack }: { onBack: () => void }) => {
                 </h1>
                 <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
                     Access your <strong>online exams</strong> and analytics seamlessly across all your devices. Native apps for performance, web for convenience.
+                </p>
+            </div>
+
+            {/* Platform Availability Section */}
+            <div className="text-center mb-12">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-white">Choose Your Platform</h2>
+                <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                    Download our mobile apps or access the full web experience. All platforms sync seamlessly.
                 </p>
             </div>
 

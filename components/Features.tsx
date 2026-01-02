@@ -116,7 +116,7 @@ export const Features: React.FC = () => {
             
             {/* Section 1: Question Types */}
             <article className="grid lg:grid-cols-5 gap-12 items-center" aria-labelledby="question-types-heading">
-                <div className={`lg:col-span-2 space-y-6 text-center lg:text-left ${getAnimClass()}`}>
+                <div className={`lg:col-span-2 space-y-6 text-center lg:text-left items-center lg:items-start ${getAnimClass()}`}>
                     <h2 id="question-types-heading" className="text-3xl lg:text-4xl font-bold">
                         Premium-Style <br />
                         <span className="text-brand-glow">Question Types</span>
@@ -126,7 +126,7 @@ export const Features: React.FC = () => {
                         No more boring exams. Our platform supports the most comprehensive range of question types in the industry.
                     </p>
                 </div>
-                <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4" role="list">
+                <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4" role="list" aria-label="Question types list">
                     <QuestionTypeItem index={0} icon={CheckSquare} title="Multiple Choice" desc="Classic choose-the-correct-answer format with up to 6 options" />
                     <QuestionTypeItem index={1} icon={Type} title="Fill in the Blank" desc="Type the missing word or phrase with auto-grading support" />
                     <QuestionTypeItem index={2} icon={Languages} title="Translation" desc="Arabic ↔ English translation exercises with bidirectional support" />
